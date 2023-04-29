@@ -8,6 +8,7 @@ from models import *
 from models import storage
 from api.v1.views import app_views
 from os import getenv
+from flask import request, jsonify
 
 app = Flask(__name__)
 app.register_blueprint(app_views)
@@ -21,6 +22,13 @@ port = getenv('HBNB_API_PORT', 5000)
 def teardown_db(exception):
     """closes the storage on teardown"""
     storage.close()
+
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    resp = {"error": "Not found"}
+    return jsonify(resp)
 
 
 if __name__ == '__main__':
