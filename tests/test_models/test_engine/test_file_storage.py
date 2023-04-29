@@ -15,7 +15,7 @@ from models.review import Review
 from models.state import State
 from models.user import User
 import json
-import os
+from os import path
 import pep8
 import unittest
 FileStorage = file_storage.FileStorage
@@ -113,3 +113,50 @@ class TestFileStorage(unittest.TestCase):
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
+
+@unittest.skipIf(models.storage_t == 'db', 'skip if environ is not db')
+class TestCountGet(unittest.TestCase):
+    """testing Count and Get methods"""
+
+    @classmethod
+    def setUpClass(cls):
+        """sets up the class"""
+        cls.user = User()
+        cls.user.save()
+        cls.bm_obj = BaseModel()
+        cls.bm_obj.save()
+
+    def tearDownClass():
+        """tidies up the tests removing storage objects"""
+        models.storage.delete_all()
+        models.remove('../file.json')
+
+    def setUp(self):
+        """initializes new user for testing"""
+        self.user = TestCountGet.user
+        self.bm_obj = TestCountGet.bm_obj
+
+    def test_storage_file_exists(self):
+        """... checks proper FileStorage instantiation"""
+        models.remove('../file.json')
+        self.user.save()
+        self.assertTrue(path.isfile('../file.json'))
+
+    def test_count_cls(self):
+        """... checks count method with class input arg"""
+        count_user = models.storage.count('User')
+        expected = 1
+        self.assertEqual(expected, count_user)
+
+    def test_count_all(self):
+        """... checks the count method with no class input"""
+        count_all = models.storage.count()
+        expected = 2
+        self.assertEqual(expected, count_all)
+
+    def test_get_cls_id(self):
+        """... checks get method with class and id inputs"""
+        duplicate = models.storage.get('User', self.user.id)
+        expected = self.user.id
+        actual = duplicate.id
+        self.assertEqual(expected, actual)
