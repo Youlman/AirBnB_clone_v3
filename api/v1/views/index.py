@@ -1,12 +1,8 @@
 #!/usr/bin/python3
-"""Instantiate  blueprint"""
-from flask import Blueprint
-from api.v1.views.index import *
+"""Define status and stats routes"""
 from api.v1.views import app_views
 from flask import request, jsonify
 from models import storage
-
-app_views = Blueprint('app_views', __name__, url_prefix='/api/v1')
 
 
 @app_views.route('/status', methods=['GET'])

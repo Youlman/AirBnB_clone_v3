@@ -81,7 +81,7 @@ class DBStorage:
             all_obj = self.all(cls)
             return all_obj.get("{}.{}".format(cls, id))
         return None
-    
+
     def count(self, cls=None):
         """  the number of objects in storage matching the given class.
           If no class is passed,
