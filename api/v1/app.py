@@ -3,7 +3,7 @@
 starts a Flask api
 """
 
-from flask import Flask, render_template
+from flask import Flask, make_response
 from models import *
 from models import storage
 from api.v1.views import app_views
@@ -23,11 +23,13 @@ def teardown_db(exception):
     """closes the storage on teardown"""
     storage.close()
 
-
+    
 @app.errorhandler(404)
-def page_not_found(e):
-    resp = {"error": "Not found"}
-    return jsonify(resp)
+def page_not_found(error):
+    """
+        Error Status Codes  handle
+    """
+    return make_response(jsonify({'error': 'Not found'}), 404)
 
 
 if __name__ == '__main__':
