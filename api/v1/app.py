@@ -23,7 +23,7 @@ def teardown_db(exception):
     """closes the storage on teardown"""
     storage.close()
 
-    
+
 @app.errorhandler(404)
 def page_not_found(error):
     """
